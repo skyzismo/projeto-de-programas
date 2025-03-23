@@ -14,7 +14,7 @@
 
 ### Guia de setup do ambiente
 
-1. Clonar o repo: `git clone https://github.com/skyzismo/aed2-codes.git`
+1. Clonar o repo: `git clone https://github.com/skyzismo/projeto-de-programas.git`
 2. Receber as atualizações remotas: `git fetch`
 3. Listar branches remotas: `git branch -r`
 4. Mudar para develop: `git checkout develop`

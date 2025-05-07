@@ -1,10 +1,12 @@
 package br.edu.ufam.icomp.lab_excecoes;
 
-/**
- * Distância máxima entre duas coordenadas vizinhas excedida.
- */
 public class DistanciaEntrePontosExcedidaException extends RoverCaminhoException {
-    public DistanciaEntrePontosExcedidaException() {
-        super("Distância máxima entre duas coordenadas vizinhas excedida");
+    private static final long serialVersionUID = 1L;
+
+    public DistanciaEntrePontosExcedidaException(){
+        this("Distância máxima entre duas coordenadas vizinhas excedida");
+    }   
+    public DistanciaEntrePontosExcedidaException(String s){
+        super(s);
     }
 }

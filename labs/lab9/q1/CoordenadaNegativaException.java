@@ -2,8 +2,12 @@
 package br.edu.ufam.icomp.lab_excecoes;
 
 public class CoordenadaNegativaException extends RoverCoordenadaException {
-    public CoordenadaNegativaException() {
-        super();
-        System.out.println("Coordenada com valor negativo");
+    private static final long serialVersionUID = 1L;
+
+    public CoordenadaNegativaException(){
+        this("Coordenada com valor negativo");
+    }   
+    public CoordenadaNegativaException(String s){
+        super(s);
     }
 }

@@ -1,10 +1,12 @@
 package br.edu.ufam.icomp.lab_excecoes;
 
-/**
- * Dígito da coordenada inválido.
- */
 public class DigitoInvalidoException extends RoverCoordenadaException {
-    public DigitoInvalidoException() {
-        super("Digito da coordenada inválido");
+    private static final long serialVersionUID = 1L;
+
+    public DigitoInvalidoException(){
+        this("Digito da coordenada inválido");
+    }   
+    public DigitoInvalidoException(String s){
+        super(s);
     }
 }

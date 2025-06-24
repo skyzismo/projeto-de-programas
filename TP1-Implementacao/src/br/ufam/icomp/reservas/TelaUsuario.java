@@ -8,9 +8,10 @@ import java.sql.*;
 public class TelaUsuario extends JFrame {
     private JTextField tfNome;
     private JComboBox<String> cbTipo;
+    private JFrame listaUsuariosFrame;
 
     public TelaUsuario() {
-        super("Cadastro de Usuários");
+        super("Cadastro de Usuarios");
 
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -20,12 +21,12 @@ public class TelaUsuario extends JFrame {
         tfNome = new JTextField(20);
 
         JLabel lbTipo = new JLabel("Tipo:");
-        cbTipo = new JComboBox<>(new String[]{"Professor", "Funcionário", "Aluno"});
+        cbTipo = new JComboBox<>(new String[]{"Professor", "Funcionario", "Aluno"});
 
         JButton btnSalvar = new JButton("Salvar");
         btnSalvar.addActionListener(e -> salvarUsuario());
 
-        JButton btnBuscar = new JButton("Buscar todos");
+        JButton btnBuscar = new JButton("Consultar Usuarios");
         btnBuscar.addActionListener(e -> abrirListaDeUsuarios());
 
         add(lbNome);
@@ -47,18 +48,22 @@ public class TelaUsuario extends JFrame {
             stmt.setString(1, nome);
             stmt.setString(2, tipo);
             stmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Usuário salvo com sucesso!");
+            JOptionPane.showMessageDialog(this, "Usuario salvo com sucesso!");
             tfNome.setText("");
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Erro ao salvar usuário.");
+            JOptionPane.showMessageDialog(this, "Erro ao salvar usuario.");
         }
     }
 
     private void abrirListaDeUsuarios() {
-        JFrame listaFrame = new JFrame("Usuários Cadastrados");
-        listaFrame.setSize(500, 400);
-        listaFrame.setLayout(new BorderLayout());
+        if (listaUsuariosFrame != null) {
+            listaUsuariosFrame.dispose();
+        }
+
+        listaUsuariosFrame = new JFrame("Usuarios Cadastrados");
+        listaUsuariosFrame.setSize(500, 400);
+        listaUsuariosFrame.setLayout(new BorderLayout());
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -83,20 +88,20 @@ public class TelaUsuario extends JFrame {
 
                 JButton deletarBtn = new JButton("Deletar");
                 deletarBtn.addActionListener(ev -> {
-                    int confirm = JOptionPane.showConfirmDialog(listaFrame,
-                            "Tem certeza que deseja deletar este usuário?", "Confirmar exclusão",
+                    int confirm = JOptionPane.showConfirmDialog(listaUsuariosFrame,
+                            "Tem certeza que deseja deletar este usuario?", "Confirmar exclusao",
                             JOptionPane.YES_NO_OPTION);
                     if (confirm == JOptionPane.YES_OPTION) {
                         try (Connection delConn = Banco.conectar();
                              PreparedStatement delStmt = delConn.prepareStatement("DELETE FROM Usuario WHERE id = ?")) {
                             delStmt.setInt(1, id);
                             delStmt.executeUpdate();
-                            JOptionPane.showMessageDialog(listaFrame, "Usuário deletado com sucesso!");
-                            listaFrame.dispose();
+                            JOptionPane.showMessageDialog(listaUsuariosFrame, "Usuario deletado com sucesso!");
+                            listaUsuariosFrame.dispose();
                             abrirListaDeUsuarios();
                         } catch (SQLException ex) {
                             ex.printStackTrace();
-                            JOptionPane.showMessageDialog(listaFrame, "Erro ao deletar usuário.");
+                            JOptionPane.showMessageDialog(listaUsuariosFrame, "Erro ao deletar usuario.");
                         }
                     }
                 });
@@ -106,28 +111,28 @@ public class TelaUsuario extends JFrame {
             }
 
             if (!temUsuario) {
-                JOptionPane.showMessageDialog(this, "Não há usuários cadastrados.");
+                JOptionPane.showMessageDialog(this, "Nao ha usuarios cadastrados.");
                 return;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Erro ao buscar usuários.");
+            JOptionPane.showMessageDialog(this, "Erro ao buscar usuarios.");
             return;
         }
 
         JScrollPane scroll = new JScrollPane(panel);
-        listaFrame.add(scroll, BorderLayout.CENTER);
-        listaFrame.setVisible(true);
+        listaUsuariosFrame.add(scroll, BorderLayout.CENTER);
+        listaUsuariosFrame.setVisible(true);
     }
 
     private void abrirEdicaoUsuario(int id, String nomeAtual, String tipoAtual) {
-        JFrame edicaoFrame = new JFrame("Editar Usuário");
+        JFrame edicaoFrame = new JFrame("Editar Usuario");
         edicaoFrame.setSize(300, 200);
         edicaoFrame.setLayout(new FlowLayout());
 
         JTextField tfNovoNome = new JTextField(nomeAtual, 20);
-        JComboBox<String> cbNovoTipo = new JComboBox<>(new String[]{"Professor", "Funcionário", "Aluno"});
+        JComboBox<String> cbNovoTipo = new JComboBox<>(new String[]{"Professor", "Funcionario", "Aluno"});
         cbNovoTipo.setSelectedItem(tipoAtual);
 
         JButton btnAtualizar = new JButton("Atualizar");
@@ -141,12 +146,13 @@ public class TelaUsuario extends JFrame {
                 stmt.setString(2, novoTipo);
                 stmt.setInt(3, id);
                 stmt.executeUpdate();
-                JOptionPane.showMessageDialog(edicaoFrame, "Usuário atualizado com sucesso!");
+                JOptionPane.showMessageDialog(edicaoFrame, "Usuario atualizado com sucesso!");
                 edicaoFrame.dispose();
+                listaUsuariosFrame.dispose();
                 abrirListaDeUsuarios();
             } catch (SQLException e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(edicaoFrame, "Erro ao atualizar usuário.");
+                JOptionPane.showMessageDialog(edicaoFrame, "Erro ao atualizar usuario.");
             }
         });
 

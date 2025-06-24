@@ -5,15 +5,15 @@ import java.awt.*;
 
 public class InterfacePrincipal extends JFrame {
     public InterfacePrincipal() {
-        setTitle("EasyRoom: Sistema para Reserva de Salas");
+        setTitle("EasyRoom: Sistema para Reserva de Salas do IComp");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(3, 2));
 
-        JButton btnSalas = new JButton("Salas");
+        JButton btnSalas = new JButton("Salas do Icomp");
         JButton btnUsuarios = new JButton("Usuarios");
-        JButton btnReservas = new JButton("Reservas de Sala");
-        JButton btnConsultar = new JButton("Consulta de Reservas");
+        JButton btnReservas = new JButton("Reserva de Sala");
+        JButton btnConsultar = new JButton("Consulta de Reserva de Sala");
         JButton btnRelatorios = new JButton("Gerar Relatorios");
 
         btnSalas.addActionListener(e -> new TelaSala().setVisible(true));

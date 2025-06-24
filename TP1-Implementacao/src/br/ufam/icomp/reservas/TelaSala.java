@@ -8,118 +8,155 @@ import java.sql.*;
 public class TelaSala extends JFrame {
     private JTextField tfNome;
     private JComboBox<String> cbTipo;
-    private JButton btnSalvar, btnBuscar, btnRemover, btnAtualizar;
 
     public TelaSala() {
-        super("Gerenciar Salas");
-        setLayout(new GridLayout(6, 2));
+        super("Cadastro de Salas");
+        setSize(350, 180);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new GridLayout(4, 2));
 
         add(new JLabel("Nome:"));
         tfNome = new JTextField();
         add(tfNome);
 
         add(new JLabel("Tipo:"));
-        cbTipo = new JComboBox<>(new String[]{
-            "Sala de Reuniões", 
-            "Sala de Seminários", 
-            "Laboratório de Graduação"
+        cbTipo = new JComboBox<>(new String[] {
+            "Sala de Reuniões", "Sala de Seminários", "Laboratório de Graduação"
         });
         add(cbTipo);
 
-        btnSalvar = new JButton("Salvar");
-        btnBuscar = new JButton("Buscar Todas");
-        btnRemover = new JButton("Remover");
-        btnAtualizar = new JButton("Atualizar");
-
-        add(btnSalvar);
-        add(btnBuscar);
-        add(btnRemover);
-        add(btnAtualizar);
-
+        JButton btnSalvar = new JButton("Salvar");
         btnSalvar.addActionListener(e -> salvarSala());
-        btnBuscar.addActionListener(e -> buscarSalas());
-        btnRemover.addActionListener(e -> removerSala());
-        btnAtualizar.addActionListener(e -> atualizarSala());
+        add(btnSalvar);
 
-        setSize(500, 300);
+        JButton btnBuscar = new JButton("Buscar todas");
+        btnBuscar.addActionListener(e -> abrirListaDeSalas());
+        add(btnBuscar);
+
         setVisible(true);
     }
 
     private void salvarSala() {
-        try (Connection conn = Banco.conectar()) {
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO sala (nome, tipo) VALUES (?, ?)");
-            stmt.setString(1, tfNome.getText());
-            stmt.setString(2, cbTipo.getSelectedItem().toString());
+        String nome = tfNome.getText();
+        String tipo = cbTipo.getSelectedItem().toString();
+
+        try (Connection conn = Banco.conectar();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "INSERT INTO Sala (nome, tipo) VALUES (?, ?)")) {
+            stmt.setString(1, nome);
+            stmt.setString(2, tipo);
             stmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Sala salva com sucesso!");
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Sala cadastrada com sucesso!");
+        } catch (SQLException e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Erro ao salvar sala.");
         }
     }
 
-    private void buscarSalas() {
-        try (Connection conn = Banco.conectar()) {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM sala");
+private void abrirListaDeSalas() {
+    JFrame listaFrame = new JFrame("Salas Cadastradas");
+    listaFrame.setSize(500, 400);
+    listaFrame.setLayout(new BorderLayout());
 
-            StringBuilder sb = new StringBuilder();
-            while (rs.next()) {
-                sb.append("ID: ").append(rs.getInt("id"))
-                  .append(" - Nome: ").append(rs.getString("nome"))
-                  .append(" - Tipo: ").append(rs.getString("tipo"))
-                  .append("\n");
-            }
+    JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-            if (sb.length() == 0) {
-                JOptionPane.showMessageDialog(this, "Não há salas cadastradas.");
-            } else {
-                JTextArea textArea = new JTextArea(sb.toString());
-                textArea.setEditable(false);
-                JScrollPane scrollPane = new JScrollPane(textArea);
-                scrollPane.setPreferredSize(new Dimension(400, 200));
-                JOptionPane.showMessageDialog(this, scrollPane, "Lista de Salas", JOptionPane.INFORMATION_MESSAGE);
-            }
+    try (Connection conn = Banco.conectar();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery("SELECT * FROM Sala")) {
 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Erro ao buscar salas.");
+        boolean temSala = false;
+        while (rs.next()) {
+            temSala = true;
+            int id = rs.getInt("id");
+            String nome = rs.getString("nome");
+            String tipo = rs.getString("tipo");
+
+            JPanel linha = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            linha.add(new JLabel("ID: " + id + " | Nome: " + nome + " | Tipo: " + tipo));
+
+            JButton editarBtn = new JButton("Editar");
+            editarBtn.addActionListener(ev -> abrirEdicaoSala(id, nome, tipo));
+            linha.add(editarBtn);
+
+            JButton deletarBtn = new JButton("Deletar");
+            deletarBtn.addActionListener(ev -> {
+                int confirm = JOptionPane.showConfirmDialog(listaFrame,
+                        "Tem certeza que deseja deletar esta sala?", "Confirmar exclusão",
+                        JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    try (Connection delConn = Banco.conectar();
+                         PreparedStatement delStmt = delConn.prepareStatement(
+                                 "DELETE FROM Sala WHERE id = ?")) {
+                        delStmt.setInt(1, id);
+                        delStmt.executeUpdate();
+                        JOptionPane.showMessageDialog(listaFrame, "Sala deletada com sucesso!");
+                        listaFrame.dispose();
+                        abrirListaDeSalas();
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(listaFrame, "Erro ao deletar sala.");
+                    }
+                }
+            });
+            linha.add(deletarBtn);
+
+            panel.add(linha);
         }
+
+        if (!temSala) {
+            JOptionPane.showMessageDialog(this, "Não há salas cadastradas.");
+            return;
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Erro ao buscar salas.");
+        return;
     }
 
-    private void removerSala() {
-        String nomeRemover = tfNome.getText();
-        try (Connection conn = Banco.conectar()) {
-            PreparedStatement stmt = conn.prepareStatement("DELETE FROM sala WHERE nome = ?");
-            stmt.setString(1, nomeRemover);
-            int rows = stmt.executeUpdate();
-            if (rows > 0) {
-                JOptionPane.showMessageDialog(this, "Sala removida com sucesso.");
-                tfNome.setText("");
-                cbTipo.setSelectedIndex(0);
-            } else {
-                JOptionPane.showMessageDialog(this, "Sala não encontrada.");
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
+    JScrollPane scroll = new JScrollPane(panel);
+    listaFrame.add(scroll, BorderLayout.CENTER);
+    listaFrame.setVisible(true);
+}
 
-    private void atualizarSala() {
-        String nome = tfNome.getText();
-        String tipo = cbTipo.getSelectedItem().toString();
-        try (Connection conn = Banco.conectar()) {
-            PreparedStatement stmt = conn.prepareStatement("UPDATE sala SET tipo = ? WHERE nome = ?");
-            stmt.setString(1, tipo);
-            stmt.setString(2, nome);
-            int rows = stmt.executeUpdate();
-            if (rows > 0) {
-                JOptionPane.showMessageDialog(this, "Sala atualizada com sucesso.");
-            } else {
-                JOptionPane.showMessageDialog(this, "Sala não encontrada para atualizar.");
+
+    private void abrirEdicaoSala(int id, String nomeAntigo, String tipoAntigo) {
+        JFrame edicaoFrame = new JFrame("Editar Sala");
+        edicaoFrame.setSize(350, 180);
+        edicaoFrame.setLayout(new GridLayout(4, 2));
+
+        JTextField tfNomeEdicao = new JTextField(nomeAntigo);
+        JComboBox<String> cbTipoEdicao = new JComboBox<>(new String[] {
+            "Sala de Reuniões", "Sala de Seminários", "Laboratório de Graduação"
+        });
+        cbTipoEdicao.setSelectedItem(tipoAntigo);
+
+        edicaoFrame.add(new JLabel("Novo nome:"));
+        edicaoFrame.add(tfNomeEdicao);
+
+        edicaoFrame.add(new JLabel("Novo tipo:"));
+        edicaoFrame.add(cbTipoEdicao);
+
+        JButton btnAtualizar = new JButton("Atualizar");
+        btnAtualizar.addActionListener(e -> {
+            try (Connection conn = Banco.conectar();
+                 PreparedStatement stmt = conn.prepareStatement(
+                         "UPDATE Sala SET nome = ?, tipo = ? WHERE id = ?")) {
+                stmt.setString(1, tfNomeEdicao.getText());
+                stmt.setString(2, cbTipoEdicao.getSelectedItem().toString());
+                stmt.setInt(3, id);
+                stmt.executeUpdate();
+                JOptionPane.showMessageDialog(edicaoFrame, "Sala atualizada com sucesso!");
+                edicaoFrame.dispose();
+                abrirListaDeSalas();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(edicaoFrame, "Erro ao atualizar sala.");
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+        });
+
+        edicaoFrame.add(btnAtualizar);
+        edicaoFrame.setVisible(true);
     }
 }

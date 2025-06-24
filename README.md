@@ -15,7 +15,7 @@
 #### Para compilação do TP1:
 
 1. `javac -cp "lib/sqlite-jdbc-3.50.1.0.jar" -d bin src/br/ufam/icomp/reservas/*.java`
-2.`java -cp "bin;lib/sqlite-jdbc-3.50.1.0.jar" br.ufam.icomp.reservas.Main`
+2. `java -cp "bin;lib/sqlite-jdbc-3.50.1.0.jar" br.ufam.icomp.reservas.Main`
 
 ### Guia de setup do ambiente
 

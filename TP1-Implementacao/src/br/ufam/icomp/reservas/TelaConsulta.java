@@ -9,16 +9,31 @@ public class TelaConsulta extends JFrame {
 
     public TelaConsulta() {
         setTitle("Consulta de Reservas");
-        setSize(500, 300);
+        setSize(600, 400);
         setLayout(new BorderLayout());
         add(new JScrollPane(txtResultado), BorderLayout.CENTER);
         consultar();
     }
 
     private void consultar() {
-        try (Connection conn = Banco.conectar(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT R.data, R.hora, S.nome AS sala, U.nome AS usuario FROM Reserva R JOIN Sala S ON R.sala_id = S.id JOIN Usuario U ON R.usuario_id = U.id")) {
+        txtResultado.setText(""); // Limpa o conteúdo anterior
+        
+        try (Connection conn = Banco.conectar(); 
+             Statement stmt = conn.createStatement(); 
+             ResultSet rs = stmt.executeQuery(
+                 "SELECT R.data, R.hora_inicio, R.hora_fim, S.nome AS sala, U.nome AS usuario " +
+                 "FROM Reserva R " +
+                 "JOIN Sala S ON R.sala_id = S.id " +
+                 "JOIN Usuario U ON R.usuario_id = U.id " +
+                 "ORDER BY R.data, R.hora_inicio")) {
+            
             while (rs.next()) {
-                txtResultado.append(rs.getString("data") + " " + rs.getString("hora") + " - Sala: " + rs.getString("sala") + ", Usuário: " + rs.getString("usuario") + "\n");
+                txtResultado.append(
+                    rs.getString("data") + " - " +
+                    rs.getString("hora_inicio") + " as " +
+                    rs.getString("hora_fim") + "\n" +
+                    "Sala: " + rs.getString("sala") + "\n" +
+                    "Usuario: " + rs.getString("usuario") + "\n\n");
             }
         } catch (SQLException e) {
             e.printStackTrace();

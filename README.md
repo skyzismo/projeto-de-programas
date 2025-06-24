@@ -12,6 +12,11 @@
 4. `java --version` confere se o Java está instalado
 5. `java seu_arquivo.java` compila seu código
 
+#### Para compilação do TP1:
+
+1. `javac -cp "lib/sqlite-jdbc-3.50.1.0.jar" -d bin src/br/ufam/icomp/reservas/*.java`
+2.`java -cp "bin;lib/sqlite-jdbc-3.50.1.0.jar" br.ufam.icomp.reservas.Main`
+
 ### Guia de setup do ambiente
 
 1. Clonar o repo: `git clone https://github.com/skyzismo/projeto-de-programas.git`

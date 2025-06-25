@@ -1,3 +1,15 @@
+/**
+ * Classe principal que representa a interface gráfica do sistema EasyRoom.
+ * <p>
+ * Responsável pela tela inicial com os principais acessos às funcionalidades
+ * do sistema de reservas de salas.
+ * </p>
+ *
+ * @author Lucas Gadelha - 22050517
+ * @version 1.0
+ * @since 2025-06-23
+ */
+
 package br.ufam.icomp.reservas;
 
 import javax.swing.*;
@@ -87,8 +99,7 @@ public class InterfacePrincipal extends JFrame {
         btn.setAlignmentX(Component.CENTER_ALIGNMENT);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.setMaximumSize(new Dimension(250, btn.getPreferredSize().height));
-        
-        // Remove qualquer efeito de hover/mouse
+
         btn.setContentAreaFilled(true);
         btn.setOpaque(true);
         

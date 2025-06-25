@@ -1,3 +1,14 @@
+/**
+ * Classe responsável pela interface de cadastro e gerenciamento de salas.
+ * <p>
+ * Permite cadastrar, editar, listar e excluir salas do sistema.
+ * </p>
+ * 
+ * @author Lucas Gadelha - 22050517
+ * @version 1.0
+ * @since 2025-06-23
+ */
+
 package br.ufam.icomp.reservas;
 
 import javax.swing.*;
@@ -12,7 +23,7 @@ public class TelaSala extends JFrame {
 
     public TelaSala() {
         super("Cadastro de Salas do IComp");
-        setSize(350, 180);
+        setSize(400, 200);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new GridLayout(4, 2));
         setLocationRelativeTo(null);
@@ -89,7 +100,7 @@ public class TelaSala extends JFrame {
                 JButton deletarBtn = new JButton("Deletar");
                 deletarBtn.addActionListener(ev -> {
                     int confirm = JOptionPane.showConfirmDialog(listaSalasFrame,
-                            "Tem certeza que deseja deletar esta sala?", "Confirmar exclusão",
+                            "Tem certeza que deseja deletar esta sala?", "Confirmar exclusao",
                             JOptionPane.YES_NO_OPTION);
                     if (confirm == JOptionPane.YES_OPTION) {
                         try (Connection delConn = Banco.conectar();
@@ -127,10 +138,20 @@ public class TelaSala extends JFrame {
         listaSalasFrame.setVisible(true);
     }
 
+    /**
+     * Abre a interface de edição de sala.
+     *
+     * @param id ID da sala
+     * @param nomeAntigo Nome atual da sala
+     * @param tipoAntigo Tipo atual da sala
+     */
+
+
     private void abrirEdicaoSala(int id, String nomeAntigo, String tipoAntigo) {
         JFrame edicaoFrame = new JFrame("Editar Sala");
-        edicaoFrame.setSize(350, 180);
+        edicaoFrame.setSize(450, 180);
         edicaoFrame.setLayout(new GridLayout(4, 2));
+
         setLocationRelativeTo(null);
 
         JTextField tfNomeEdicao = new JTextField(nomeAntigo);

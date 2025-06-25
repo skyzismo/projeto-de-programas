@@ -15,6 +15,7 @@ public class TelaSala extends JFrame {
         setSize(350, 180);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new GridLayout(4, 2));
+        setLocationRelativeTo(null);
 
         add(new JLabel("Nome:"));
         tfNome = new JTextField();
@@ -60,7 +61,8 @@ public class TelaSala extends JFrame {
         }
 
         listaSalasFrame = new JFrame("Salas Cadastradas");
-        listaSalasFrame.setSize(500, 400);
+        listaSalasFrame.setSize(600, 400);
+        listaSalasFrame.setLocationRelativeTo(null);
         listaSalasFrame.setLayout(new BorderLayout());
 
         JPanel panel = new JPanel();
@@ -129,6 +131,7 @@ public class TelaSala extends JFrame {
         JFrame edicaoFrame = new JFrame("Editar Sala");
         edicaoFrame.setSize(350, 180);
         edicaoFrame.setLayout(new GridLayout(4, 2));
+        setLocationRelativeTo(null);
 
         JTextField tfNomeEdicao = new JTextField(nomeAntigo);
         JComboBox<String> cbTipoEdicao = new JComboBox<>(new String[] {

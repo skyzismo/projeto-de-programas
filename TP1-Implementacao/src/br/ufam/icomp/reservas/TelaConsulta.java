@@ -12,6 +12,7 @@ public class TelaConsulta extends JFrame {
         setSize(600, 400);
         setLayout(new BorderLayout());
         add(new JScrollPane(txtResultado), BorderLayout.CENTER);
+        setLocationRelativeTo(null);
         consultar();
     }
 

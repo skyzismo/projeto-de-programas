@@ -13,9 +13,10 @@ public class TelaUsuario extends JFrame {
     public TelaUsuario() {
         super("Cadastro de Usuarios");
 
-        setSize(400, 300);
+        setSize(600, 150);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new FlowLayout());
+        setLocationRelativeTo(null);
 
         JLabel lbNome = new JLabel("Nome:");
         tfNome = new JTextField(20);
@@ -63,6 +64,7 @@ public class TelaUsuario extends JFrame {
 
         listaUsuariosFrame = new JFrame("Usuarios Cadastrados");
         listaUsuariosFrame.setSize(500, 400);
+        listaUsuariosFrame.setLocationRelativeTo(null);
         listaUsuariosFrame.setLayout(new BorderLayout());
 
         JPanel panel = new JPanel();

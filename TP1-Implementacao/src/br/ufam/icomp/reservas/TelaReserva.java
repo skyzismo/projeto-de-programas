@@ -19,8 +19,9 @@ public class TelaReserva extends JFrame {
 
     public TelaReserva() {
         setTitle("Reservar Sala");
-        setSize(500, 350);
-        setLayout(new GridLayout(7, 2));
+        setSize(600, 350);
+        setLayout(new GridLayout(7, 3));
+        setLocationRelativeTo(null);
 
         carregarSalas();
         carregarUsuarios();

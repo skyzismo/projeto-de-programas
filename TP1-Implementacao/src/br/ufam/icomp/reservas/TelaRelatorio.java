@@ -13,6 +13,7 @@ public class TelaRelatorio extends JFrame {
         setLayout(new BorderLayout());
         txtRelatorio.setFont(new Font("Monospaced", Font.PLAIN, 12)); // Fonte monoespaçada para alinhamento
         add(new JScrollPane(txtRelatorio), BorderLayout.CENTER);
+        setLocationRelativeTo(null);
         gerar();
     }
 

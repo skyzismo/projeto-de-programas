@@ -1,3 +1,11 @@
+/**
+ * Classe responsável pela interface de cadastro e gerenciamento de usuários.
+ * 
+ * @author Lucas Gadelha - 22050517
+ * @version 1.0
+ * @since 2025-06-23
+ */
+
 package br.ufam.icomp.reservas;
 
 import javax.swing.*;
@@ -128,9 +136,17 @@ public class TelaUsuario extends JFrame {
         listaUsuariosFrame.setVisible(true);
     }
 
+    /**
+     * Abre a interface de edição de usuário.
+     *
+     * @param id ID do usuário
+     * @param nomeAtual Nome atual do usuário
+     * @param tipoAtual Tipo atual do usuário
+     */
+
     private void abrirEdicaoUsuario(int id, String nomeAtual, String tipoAtual) {
         JFrame edicaoFrame = new JFrame("Editar Usuario");
-        edicaoFrame.setSize(300, 200);
+        edicaoFrame.setSize(350, 200);
         edicaoFrame.setLayout(new FlowLayout());
 
         JTextField tfNovoNome = new JTextField(nomeAtual, 20);

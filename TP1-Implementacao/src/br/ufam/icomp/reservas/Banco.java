@@ -1,3 +1,15 @@
+/**
+ * Classe Banco que realiza a conexão com o banco de dados SQLite do sistema EasyRoom.
+ * <p>
+ * Esta classe é responsável por criar as 3 tabelas essenciais Sala, Usuario e Reserva para as principais
+ * operações às funcionalidades do sistema.
+ * </p>
+ * 
+ * @author Lucas Gadelha - 22050517
+ * @version 1.0
+ * @since 2025-06-23
+ */
+
 package br.ufam.icomp.reservas;
 
 import java.sql.Connection;
@@ -6,14 +18,22 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Banco {
+    /** URL de conexão com o banco de dados */
     private static final String URL = "jdbc:sqlite:reservas.db";
+
+    /**
+     * Estabelece conexão com o banco de dados.
+     *
+     * @return Connection objeto de conexão
+     * @throws SQLException em caso de erro na conexão
+     */
 
     static {
         try (Connection conn = conectar()) {
             if (conn != null) {
                 Statement stmt = conn.createStatement();
 
-                // Cria tabela Sala
+                /**Cria tabela Sala */
                 stmt.executeUpdate(
                     "CREATE TABLE IF NOT EXISTS Sala (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -22,7 +42,7 @@ public class Banco {
                     ")"
                 );
 
-                // Cria tabela Usuario
+                /**Cria tabela Usuario */
                 stmt.executeUpdate(
                     "CREATE TABLE IF NOT EXISTS Usuario (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -31,7 +51,7 @@ public class Banco {
                     ")"
                 );
 
-                // Cria tabela Reserva
+                /**Cria tabela Reserva */
                 stmt.executeUpdate(
                     "CREATE TABLE IF NOT EXISTS Reserva (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +

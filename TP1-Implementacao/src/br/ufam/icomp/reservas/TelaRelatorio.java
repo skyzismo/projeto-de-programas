@@ -1,3 +1,11 @@
+/**
+ * Classe responsável pela geração de relatórios de reservas.
+ * 
+ * @author Lucas Gadelha - 22050517
+ * @version 1.0
+ * @since 2025-06-23
+ */
+
 package br.ufam.icomp.reservas;
 
 import javax.swing.*;
